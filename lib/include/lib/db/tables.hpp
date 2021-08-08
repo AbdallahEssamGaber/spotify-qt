@@ -2,6 +2,7 @@
 
 #include "lib/spotify/album.hpp"
 #include "lib/spotify/track.hpp"
+#include "lib/spotify/artist.hpp"
 
 #include "thirdparty/sqlite_orm.h"
 
@@ -19,6 +20,13 @@ namespace lib
 			decltype(orm::make_column("artist", &lib::spt::album::artist)),
 			decltype(orm::make_column("release_date", &lib::spt::album::release_date))>;
 
+		using artists = orm::internal::table_t<lib::spt::artist,
+			decltype(orm::make_column("id", &lib::spt::artist::id, orm::primary_key())),
+			decltype(orm::make_column("name", &lib::spt::artist::name)),
+			decltype(orm::make_column("followers", &lib::spt::artist::followers)),
+			decltype(orm::make_column("popularity", &lib::spt::artist::popularity)),
+			decltype(orm::make_column("image", &lib::spt::artist::image))>;
+
 		using tracks = orm::internal::table_t<lib::spt::track,
 			decltype(orm::make_column("id", &lib::spt::track::id, orm::primary_key())),
 			decltype(orm::make_column("name", &lib::spt::track::name)),
@@ -28,6 +36,6 @@ namespace lib
 			decltype(orm::make_column("added_at", &lib::spt::track::added_at)),
 			decltype(orm::make_column("image", &lib::spt::track::image))>;
 
-		using storage = orm::internal::storage_t<albums, tracks>;
+		using storage = orm::internal::storage_t<albums, artists, tracks>;
 	}
 }
