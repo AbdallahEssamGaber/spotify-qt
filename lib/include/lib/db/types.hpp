@@ -5,6 +5,8 @@
 
 namespace sqlite_orm
 {
+	//region lib::album_group
+
 	template<>
 	struct type_printer<lib::album_group>: public integer_printer
 	{
@@ -41,4 +43,6 @@ namespace sqlite_orm
 			return extract(sqlite3_column_int(stmt, column_index));
 		}
 	};
+
+	//endregion
 }
