@@ -51,14 +51,40 @@ auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
 		albums, artists, tracks, images);
 }
 
+void lib::db_cache::from_json(const ::lib::json_cache &json_cache)
+{
+
+}
+
 auto lib::db_cache::get_album_image(const std::string &url) const -> std::vector<unsigned char>
 {
 	return {};
 }
 
+auto lib::db_cache::get_album_image(const std::string &url) -> std::vector<unsigned char>
+{
+	try
+	{
+		using namespace sqlite_orm;
+		auto data = storage
+			.get<lib::db::image>(where(c(&lib::db::image::url) == url))
+			.data;
+
+		return std::vector<unsigned char>(data.cbegin(), data.cend());
+	}
+	catch (const std::system_error &e)
+	{
+		return {};
+	}
+}
+
 void lib::db_cache::set_album_image(const std::string &url, const std::vector<unsigned char> &data)
 {
+	lib::db::image image;
+	image.url = url;
+	image.data = std::vector<char>(data.cbegin(), data.cend());
 
+	storage.replace(image);
 }
 
 auto lib::db_cache::get_playlists() const -> std::vector<lib::spt::playlist>
