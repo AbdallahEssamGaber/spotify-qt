@@ -31,14 +31,9 @@ namespace sqlite_orm
 	template<>
 	struct row_extractor<lib::album_group>
 	{
-		auto extract(int row_value) -> lib::album_group
-		{
-			return static_cast<lib::album_group>(row_value);
-		}
-
 		auto extract(sqlite3_stmt *stmt, int column_index) -> lib::album_group
 		{
-			return extract(sqlite3_column_int(stmt, column_index));
+			return static_cast<lib::album_group>(sqlite3_column_int(stmt, column_index));
 		}
 	};
 }
