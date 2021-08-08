@@ -15,6 +15,8 @@ lib::db_cache::db_cache(const lib::paths &paths)
 
 auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
 {
+	// Spotify entities
+
 	auto albums = orm::make_table<lib::spt::album>("albums",
 		orm::make_column("id", &lib::spt::album::id, orm::primary_key()),
 		orm::make_column("name", &lib::spt::album::name),
@@ -39,8 +41,14 @@ auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
 		orm::make_column("added_at", &lib::spt::track::added_at),
 		orm::make_column("image", &lib::spt::track::image));
 
+	// Other
+
+	auto images = orm::make_table<lib::db::image>("images",
+		orm::make_column("url", &lib::db::image::url, orm::primary_key()),
+		orm::make_column("data", &lib::db::image::data));
+
 	return orm::make_storage(paths.cache() / "cache.db",
-		albums, artists, tracks);
+		albums, artists, tracks, images);
 }
 
 auto lib::db_cache::get_album_image(const std::string &url) const -> std::vector<unsigned char>

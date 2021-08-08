@@ -4,6 +4,8 @@
 #include "lib/spotify/track.hpp"
 #include "lib/spotify/artist.hpp"
 
+#include "lib/db/image.hpp"
+
 #include "thirdparty/sqlite_orm.h"
 
 namespace orm = sqlite_orm;
@@ -36,6 +38,11 @@ namespace lib
 			decltype(orm::make_column("added_at", &lib::spt::track::added_at)),
 			decltype(orm::make_column("image", &lib::spt::track::image))>;
 
-		using storage = orm::internal::storage_t<albums, artists, tracks>;
+		using images = orm::internal::table_t<lib::db::image,
+			decltype(orm::make_column("url", &lib::db::image::url, orm::primary_key())),
+			decltype(orm::make_column("data", &lib::db::image::data))>;
+
+		using storage = orm::internal::storage_t<albums, artists, tracks,
+			images>;
 	}
 }
