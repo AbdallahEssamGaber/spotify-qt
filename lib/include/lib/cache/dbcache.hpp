@@ -1,8 +1,8 @@
 #pragma once
 
 #include "lib/cache.hpp"
-#include "lib/cache/tables.hpp"
-#include "lib/cache/types.hpp"
+#include "lib/db/tables.hpp"
+#include "lib/db/types.hpp"
 
 #include "lib/paths/paths.hpp"
 #include "lib/stopwatch.hpp"
