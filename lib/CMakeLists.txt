@@ -23,6 +23,7 @@ add_library(spotify-qt-lib STATIC ${MAIN_SRC} ${SUB_SRC} ${MAIN_INC} ${SUB_INC} 
 # Main source folder has the headers
 target_include_directories(spotify-qt-lib PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/include"
 	${LIB_QT_HEADERS})
 
 # Third-party libraries
