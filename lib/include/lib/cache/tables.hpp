@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lib/spotify/album.hpp"
 #include "lib/spotify/track.hpp"
 
 #include "thirdparty/sqlite_orm.h"
@@ -10,6 +11,14 @@ namespace lib
 {
 	namespace db
 	{
+		using albums = orm::internal::table_t<lib::spt::album,
+			decltype(orm::make_column("id", &lib::spt::album::id, orm::primary_key())),
+			decltype(orm::make_column("name", &lib::spt::album::name)),
+			decltype(orm::make_column("album_group", &lib::spt::album::album_group)),
+			decltype(orm::make_column("image", &lib::spt::album::image)),
+			decltype(orm::make_column("artist", &lib::spt::album::artist)),
+			decltype(orm::make_column("release_date", &lib::spt::album::release_date))>;
+
 		using tracks = orm::internal::table_t<lib::spt::track,
 			decltype(orm::make_column("id", &lib::spt::track::id, orm::primary_key())),
 			decltype(orm::make_column("name", &lib::spt::track::name)),
@@ -19,6 +28,6 @@ namespace lib
 			decltype(orm::make_column("added_at", &lib::spt::track::added_at)),
 			decltype(orm::make_column("image", &lib::spt::track::image))>;
 
-		using storage = orm::internal::storage_t<tracks>;
+		using storage = orm::internal::storage_t<albums, tracks>;
 	}
 }

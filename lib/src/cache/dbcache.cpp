@@ -15,6 +15,14 @@ lib::db_cache::db_cache(const lib::paths &paths)
 
 auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
 {
+	auto albums = orm::make_table<lib::spt::album>("albums",
+		orm::make_column("id", &lib::spt::album::id, orm::primary_key()),
+		orm::make_column("name", &lib::spt::album::name),
+		orm::make_column("album_group", &lib::spt::album::album_group),
+		orm::make_column("image", &lib::spt::album::image),
+		orm::make_column("artist", &lib::spt::album::artist),
+		orm::make_column("release_date", &lib::spt::album::release_date));
+
 	auto tracks = orm::make_table<lib::spt::track>("tracks",
 		orm::make_column("id", &lib::spt::track::id, orm::primary_key()),
 		orm::make_column("name", &lib::spt::track::name),
@@ -25,7 +33,7 @@ auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
 		orm::make_column("image", &lib::spt::track::image));
 
 	return orm::make_storage(paths.cache() / "cache.db",
-		tracks);
+		albums, tracks);
 }
 
 auto lib::db_cache::get_album_image(const std::string &url) const -> std::vector<unsigned char>
