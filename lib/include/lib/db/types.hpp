@@ -22,7 +22,7 @@ namespace sqlite_orm
 	template<>
 	struct field_printer<lib::album_group>
 	{
-		int operator()(const lib::album_group &value) const
+		auto operator()(const lib::album_group &value) const -> int
 		{
 			return static_cast<int>(value);
 		}
