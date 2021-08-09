@@ -63,19 +63,7 @@ auto lib::db_cache::get_album_image(const std::string &url) const -> std::vector
 
 auto lib::db_cache::get_album_image(const std::string &url) -> std::vector<unsigned char>
 {
-	try
-	{
-		using namespace sqlite_orm;
-		auto data = storage
-			.get<lib::db::image>(where(c(&lib::db::image::url) == url))
-			.data;
-
-		return std::vector<unsigned char>(data.cbegin(), data.cend());
-	}
-	catch (const std::system_error &e)
-	{
-		return {};
-	}
+	return {};
 }
 
 void lib::db_cache::set_album_image(const std::string &url, const std::vector<unsigned char> &data)
