@@ -1,54 +1,82 @@
 #include "lib/cache/dbcache.hpp"
 
 lib::db_cache::db_cache(const lib::paths &paths)
-	: storage(make_storage(paths))
+	: db(paths.cache() / "cache.db")
 {
 	lib::stopwatch stopwatch;
 	stopwatch.start();
 
-	storage.sync_schema();
+	make_storage();
 
 	stopwatch.stop();
-	lib::log::dev("Synced schema in {} ms",
+	lib::log::debug("Synced schema in {} ms",
 		stopwatch.elapsed<lib::stopwatch::ms, long>());
 }
 
-auto lib::db_cache::make_storage(const lib::paths &paths) -> lib::db::storage
+void lib::db_cache::make_storage()
 {
-	// Spotify entities
+	//region Metadata
 
-	auto albums = orm::make_table<lib::spt::album>("albums",
-		orm::make_column("id", &lib::spt::album::id, orm::primary_key()),
-		orm::make_column("name", &lib::spt::album::name),
-		orm::make_column("album_group", &lib::spt::album::album_group),
-		orm::make_column("image", &lib::spt::album::image),
-		orm::make_column("artist", &lib::spt::album::artist),
-		orm::make_column("release_date", &lib::spt::album::release_date));
+	db << "create table if not exists metadata (version int)";
+	if (sql<int>("select count(*) from metadata") == 0)
+	{
+		db << "insert into metadata (version) values (?)"
+			<< 1;
+	}
 
-	auto artists = orm::make_table<lib::spt::artist>("artists",
-		orm::make_column("id", &lib::spt::artist::id, orm::primary_key()),
-		orm::make_column("name", &lib::spt::artist::name),
-		orm::make_column("followers", &lib::spt::artist::followers),
-		orm::make_column("popularity", &lib::spt::artist::popularity),
-		orm::make_column("image", &lib::spt::artist::image));
+	//endregion
 
-	auto tracks = orm::make_table<lib::spt::track>("tracks",
-		orm::make_column("id", &lib::spt::track::id, orm::primary_key()),
-		orm::make_column("name", &lib::spt::track::name),
-		orm::make_column("is_local", &lib::spt::track::is_local),
-		orm::make_column("is_playable", &lib::spt::track::is_playable),
-		orm::make_column("duration", &lib::spt::track::duration),
-		orm::make_column("added_at", &lib::spt::track::added_at),
-		orm::make_column("image", &lib::spt::track::image));
+	//region Generic
 
-	// Other
+	db << "create table if not exists image"
+		  "(url text primary key not null,"
+		  "width integer not null,"
+		  "height integer not null,"
+		  "data blob null)";
 
-	auto images = orm::make_table<lib::db::image>("images",
-		orm::make_column("url", &lib::db::image::url, orm::primary_key()),
-		orm::make_column("data", &lib::db::image::data));
+	//endregion
 
-	return orm::make_storage(paths.cache() / "cache.db",
-		albums, artists, tracks, images);
+	//region Artist
+
+	db << "create table if not exists artist"
+		  "(id text primary key not null,"
+		  "name text not null,"
+		  "href text not null,"
+		  "uri text not null,"
+		  "followers integer not null,"
+		  "popularity integer not null)";
+
+	db << "create table if not exists artist_external_url"
+		  "(artist_id text not null,"
+		  "url text not null,"
+		  "description text not null,"
+		  "foreign key (artist_id) references artist (id))";
+
+	db << "create table if not exists artist_genre"
+		  "(artist_id text not null,"
+		  "genre text not null,"
+		  "foreign key (artist_id) references artist (id))";
+
+	db << "create table if not exists artist_image"
+		  "(artist_id text not null,"
+		  "image_url text not null,"
+		  "foreign key (artist_id) references artist (id),"
+		  "foreign key (image_url) references image (url))";
+
+	//endregion
+
+	//region Album
+
+	db << "create table if not exists album"
+		  "(id text primary key not null,"
+		  "name text not null,"
+		  "album_group integer not null,"
+		  "image text not null,"
+		  "artist_id text not null,"
+		  "release_date text not null,"
+		  "foreign key (artist_id) references artist (id))";
+
+	//endregion
 }
 
 void lib::db_cache::from_json(const ::lib::json_cache &json_cache)
@@ -68,11 +96,6 @@ auto lib::db_cache::get_album_image(const std::string &url) -> std::vector<unsig
 
 void lib::db_cache::set_album_image(const std::string &url, const std::vector<unsigned char> &data)
 {
-	lib::db::image image;
-	image.url = url;
-	image.data = std::vector<char>(data.cbegin(), data.cend());
-
-	storage.replace(image);
 }
 
 auto lib::db_cache::get_playlists() const -> std::vector<lib::spt::playlist>

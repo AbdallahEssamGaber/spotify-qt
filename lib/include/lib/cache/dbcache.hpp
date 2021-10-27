@@ -2,13 +2,11 @@
 
 #include "lib/cache.hpp"
 #include "lib/cache/jsoncache.hpp"
-#include "lib/db/tables.hpp"
-#include "lib/db/types.hpp"
 
 #include "lib/paths/paths.hpp"
 #include "lib/stopwatch.hpp"
 
-namespace orm = sqlite_orm;
+#include "thirdparty/sqlite_modern_cpp.h"
 
 namespace lib
 {
@@ -41,25 +39,16 @@ namespace lib
 		auto get_all_crashes() const -> std::vector<lib::crash_info> override;
 
 	private:
-		lib::db::storage storage;
+		sqlite::database db;
 
-		static auto make_storage(const lib::paths &paths) -> lib::db::storage;
+		void make_storage();
 
-//		template<typename T>
-//		auto get_by_id(const std::string &id) -> T
-//		{
-//			try
-//			{
-//				auto items = storage.get_all<lib::spt::entity>(orm::where(orm
-//				::c(&lib::spt::entity::id) == "0"));
-//			}
-//			catch (const std::system_error &e)
-//			{
-//				lib::log::dev("{} not found in cache: {}",
-//					id, e.what());
-//			}
-//
-//			return T();
-//		}
+		template<typename T>
+		auto sql(const std::string &query) -> T
+		{
+			T result;
+			db << query >> result;
+			return result;
+		}
 	};
 }
