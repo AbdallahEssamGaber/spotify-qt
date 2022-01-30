@@ -28,6 +28,7 @@ target_include_directories(spotify-qt-lib PUBLIC
 
 # Third-party libraries
 add_subdirectory(thirdparty)
+target_link_libraries(spotify-qt-lib PRIVATE spotify-qt-lib-third-party)
 
 # Version macros
 target_compile_definitions(spotify-qt-lib PUBLIC LIB_VERSION="v${PROJECT_VERSION}")
@@ -44,10 +45,6 @@ endif ()
 if (MSVC)
 	target_compile_definitions(spotify-qt-lib PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif ()
-
-# External projects
-add_subdirectory(thirdparty)
-target_link_libraries(spotify-qt-lib PRIVATE spotify-qt-lib-third-party)
 
 # Link optional libraries
 if (LIB_QT_LIBRARIES)

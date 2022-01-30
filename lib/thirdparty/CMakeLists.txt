@@ -1,6 +1,11 @@
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# CMake doesn't allow linking of libraries outside of main CMake file
+# Create a new project to link against later
+project(spotify-qt-lib-third-party)
+add_library(${PROJECT_NAME} STATIC)
+
 # SQLite cache support
 if (NOT DEFINED USE_DB_CACHE)
 	set(USE_DB_CACHE ON)
