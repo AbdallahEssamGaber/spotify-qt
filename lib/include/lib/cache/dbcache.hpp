@@ -8,17 +8,20 @@
 
 namespace lib
 {
-	class db_cache: public ::lib::cache
+	class db_cache: public cache
 	{
 	public:
 		db_cache(const lib::paths &paths);
 
-		void from_json(const ::lib::json_cache &json_cache);
+		void from_json(const json_cache &json_cache);
 
 		auto get_album_image(const std::string &url) const -> std::vector<unsigned char> override;
-		auto get_album_image(const std::string &url) -> std::vector<unsigned char>;
 		void set_album_image(const std::string &url,
 			const std::vector<unsigned char> &data) override;
+		auto get_album_image_path(const std::string &url) const -> std::string override;
+
+		auto get_album(const std::string &album_id) const -> lib::spt::album override;
+		void set_album(const spt::album &album) override;
 
 		auto get_playlists() const -> std::vector<lib::spt::playlist> override;
 		void set_playlists(const std::vector<spt::playlist> &playlists) override;

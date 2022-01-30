@@ -80,7 +80,7 @@ void lib::db_cache::make_storage()
 	//endregion
 }
 
-void lib::db_cache::from_json(const ::lib::json_cache &json_cache)
+void lib::db_cache::from_json(const lib::json_cache &json_cache)
 {
 
 }
@@ -90,12 +90,21 @@ auto lib::db_cache::get_album_image(const std::string &url) const -> std::vector
 	return {};
 }
 
-auto lib::db_cache::get_album_image(const std::string &url) -> std::vector<unsigned char>
+void lib::db_cache::set_album_image(const std::string &url, const std::vector<unsigned char> &data)
+{
+}
+
+std::string lib::db_cache::get_album_image_path(const std::string &url) const
 {
 	return {};
 }
 
-void lib::db_cache::set_album_image(const std::string &url, const std::vector<unsigned char> &data)
+lib::spt::album lib::db_cache::get_album(const std::string &album_id) const
+{
+	return {};
+}
+
+void lib::db_cache::set_album(const lib::spt::album &album)
 {
 }
 
@@ -119,7 +128,7 @@ void lib::db_cache::set_playlist(const lib::spt::playlist &playlist)
 
 }
 
-std::vector<lib::spt::track> lib::db_cache::get_tracks(const std::string &id) const
+auto lib::db_cache::get_tracks(const std::string &id) const -> std::vector<lib::spt::track>
 {
 	return {};
 }
