@@ -29,12 +29,6 @@ void lib::db_cache::make_storage()
 
 	//region Generic
 
-	db << "create table if not exists image"
-		  "(url text primary key not null,"
-		  "width integer not null,"
-		  "height integer not null,"
-		  "data blob null)";
-
 	//endregion
 
 	//region Artist
@@ -60,9 +54,11 @@ void lib::db_cache::make_storage()
 
 	db << "create table if not exists artist_image"
 		  "(artist_id text not null,"
-		  "image_url text not null,"
-		  "foreign key (artist_id) references artist (id),"
-		  "foreign key (image_url) references image (url))";
+		  "url text not null,"
+		  "width integer not null,"
+		  "height integer not null,"
+		  "data blob null,"
+		  "foreign key (artist_id) references artist (id))";
 
 	//endregion
 
