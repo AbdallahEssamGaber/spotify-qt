@@ -1,4 +1,5 @@
 #include "lib/cache/dbcache.hpp"
+#include "lib/stopwatch.hpp"
 
 lib::db_cache::db_cache(const lib::paths &paths)
 	: db(paths.cache() / "cache.db")
