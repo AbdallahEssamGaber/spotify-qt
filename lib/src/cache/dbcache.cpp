@@ -66,12 +66,54 @@ void lib::db_cache::make_storage()
 
 	db << "create table if not exists album"
 		  "(id text primary key not null,"
+		  "album_type text not null,"
+		  "total_tracks integer not null,"
+		  "href text not null,"
 		  "name text not null,"
-		  "album_group integer not null,"
-		  "image text not null,"
-		  "artist_id text not null,"
 		  "release_date text not null,"
+		  "release_date_precision text not null,"
+		  "uri text not null)";
+
+	db << "create table if not exists album_market"
+		  "(album_id text not null,"
+		  "country text not null,"
+		  "foreign key (album_id) references album (id))";
+
+	db << "create table if not exists album_external_url"
+		  "(album_id text not null,"
+		  "url text not null,"
+		  "description text not null,"
+		  "foreign key (album_id) references album (id))";
+
+	db << "create table if not exists album_image"
+		  "(album_id text not null,"
+		  "url text not null,"
+		  "width integer not null,"
+		  "height integer not null,"
+		  "data blob null,"
+		  "foreign key (album_id) references album (id))";
+
+	db << "create table if not exists album_restriction"
+		  "(album_id text not null,"
+		  "reason text not null,"
+		  "foreign key (album_id) references album (id))";
+
+	db << "create table if not exists album_artist"
+		  "(album_id text not null,"
+		  "artist_id text not null,"
+		  "foreign key (album_id) references album (id),"
 		  "foreign key (artist_id) references artist (id))";
+
+	db << "create table if not exists album_genre"
+		  "(album_id text not null,"
+		  "genre text not null,"
+		  "foreign key (album_id) references album (id))";
+
+	db << "create table if not exists album_track"
+		  "(album_id text not null,"
+		  "track_id text not null,"
+		  "foreign key (album_id) references album (id),"
+		  "foreign key (track_id) references track (id))";
 
 	//endregion
 }
