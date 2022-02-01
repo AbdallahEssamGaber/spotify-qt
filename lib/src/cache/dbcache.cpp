@@ -27,42 +27,7 @@ void lib::db_cache::make_storage()
 
 	//endregion
 
-	//region Generic
-
-	//endregion
-
-	//region Artist
-
-	db << "create table if not exists artist"
-		  "(id text primary key not null,"
-		  "name text not null,"
-		  "href text not null,"
-		  "uri text not null,"
-		  "followers integer not null,"
-		  "popularity integer not null)";
-
-	db << "create table if not exists artist_external_url"
-		  "(artist_id text not null,"
-		  "url text not null,"
-		  "description text not null,"
-		  "foreign key (artist_id) references artist (id))";
-
-	db << "create table if not exists artist_genre"
-		  "(artist_id text not null,"
-		  "genre text not null,"
-		  "foreign key (artist_id) references artist (id))";
-
-	db << "create table if not exists artist_image"
-		  "(artist_id text not null,"
-		  "url text not null,"
-		  "width integer not null,"
-		  "height integer not null,"
-		  "data blob null,"
-		  "foreign key (artist_id) references artist (id))";
-
-	//endregion
-
-	//region Album
+	//region Albums
 
 	db << "create table if not exists album"
 		  "(id text primary key not null,"
@@ -109,6 +74,37 @@ void lib::db_cache::make_storage()
 		  "track_id text not null,"
 		  "foreign key (album_id) references album (id),"
 		  "foreign key (track_id) references track (id))";
+
+	//endregion
+
+	//region Artists
+
+	db << "create table if not exists artist"
+		  "(id text primary key not null,"
+		  "name text not null,"
+		  "href text not null,"
+		  "uri text not null,"
+		  "followers integer not null,"
+		  "popularity integer not null)";
+
+	db << "create table if not exists artist_external_url"
+		  "(artist_id text not null,"
+		  "url text not null,"
+		  "description text not null,"
+		  "foreign key (artist_id) references artist (id))";
+
+	db << "create table if not exists artist_genre"
+		  "(artist_id text not null,"
+		  "genre text not null,"
+		  "foreign key (artist_id) references artist (id))";
+
+	db << "create table if not exists artist_image"
+		  "(artist_id text not null,"
+		  "url text not null,"
+		  "width integer not null,"
+		  "height integer not null,"
+		  "data blob null,"
+		  "foreign key (artist_id) references artist (id))";
 
 	//endregion
 }
