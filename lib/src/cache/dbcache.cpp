@@ -104,11 +104,6 @@ void lib::db_cache::make_storage()
 		  "foreign key (album_id) references album (id),"
 		  "foreign key (artist_id) references artist (id))";
 
-	db << "create table if not exists album_genre"
-		  "(album_id text not null,"
-		  "genre text not null,"
-		  "foreign key (album_id) references album (id))";
-
 	db << "create table if not exists album_track"
 		  "(album_id text not null,"
 		  "track_id text not null,"
