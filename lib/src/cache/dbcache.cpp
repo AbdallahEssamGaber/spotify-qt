@@ -107,6 +107,57 @@ void lib::db_cache::make_storage()
 		  "foreign key (artist_id) references artist (id))";
 
 	//endregion
+
+	//region Shows
+
+	db << "create table if not exists show"
+		  "(id text primary key not null,"
+		  "description text not null,"
+		  "html_description text not null,"
+		  "explicit boolean not null,"
+		  "href text not null,"
+		  "is_externally_hosted boolean not null,"
+		  "media_type text not null,"
+		  "name text not null,"
+		  "publisher text not null,"
+		  "uri text not null)";
+
+	db << "create table if not exists show_market"
+		  "(show_id text not null,"
+		  "country text not null,"
+		  "foreign key (show_id) references show (id))";
+
+	db << "create table if not exists show_copyright"
+		  "(show_id text not null,"
+		  "text text not null,"
+		  "type text not null,"
+		  "foreign key (show_id) references show (id))";
+
+	db << "create table if not exists show_external_url"
+		  "(show_id text not null,"
+		  "url text not null,"
+		  "description text not null,"
+		  "foreign key (show_id) references show (id))";
+
+	db << "create table if not exists show_image"
+		  "(show_id text not null,"
+		  "url text not null,"
+		  "height integer not null,"
+		  "width integer not null,"
+		  "foreign key (show_id) references show (id))";
+
+	db << "create table if not exists show_language"
+		  "(show_id text not null,"
+		  "code text not null,"
+		  "foreign key (show_id) references show (id))";
+
+	db << "create table if not exists show_episode"
+		  "(show_id text not null,"
+		  "episode_id text not null,"
+		  "foreign key (show_id) references show (id),"
+		  "foreign key (episode_id) references episode (id))";
+
+	//endregion
 }
 
 void lib::db_cache::from_json(const lib::json_cache &json_cache)
