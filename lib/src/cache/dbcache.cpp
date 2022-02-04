@@ -158,6 +158,54 @@ void lib::db_cache::make_storage()
 		  "foreign key (episode_id) references episode (id))";
 
 	//endregion
+
+	//region Episodes
+
+	db << "create table if not exists episode"
+		  "(id text primary key not null,"
+		  "audio_preview_url text not null,"
+		  "description text not null,"
+		  "html_description text not null,"
+		  "duration_ms integer not null,"
+		  "explicit boolean not null,"
+		  "href text not null,"
+		  "is_externally_hosted integer not null,"
+		  "is_playable integer not null,"
+		  "name text not null,"
+		  "release_date text not null,"
+		  "release_date_precision text not null,"
+		  "url text not null,";
+
+	db << "create table if not exists episode_external_url"
+		  "(episode_id text not null,"
+		  "url text not null,"
+		  "description text not null,"
+		  "foreign key (episode_id) references episode (id))";
+
+	db << "create table if not exists episode_image"
+		  "(episode_id text not null,"
+		  "url text not null,"
+		  "height integer not null,"
+		  "width integer not null,"
+		  "foreign key (episode_id) references episode (id))";
+
+	db << "create table if not exists episode_langauge"
+		  "(episode_id text not null,"
+		  "code text not null,"
+		  "foreign key (episode_id) references episode (id))";
+
+	db << "create table if not exists episode_resume_point"
+		  "(episode_id text not null,"
+		  "fully_played integer not null,"
+		  "resume_position_ms integer not null,"
+		  "foreign key (episode_id) references episode (id))";
+
+	db << "create table if not exists episode_restriction"
+		  "(episode_id text not null,"
+		  "reason text not null,"
+		  "foreign key (episode_id) references episode (id))";
+
+	//endregion
 }
 
 void lib::db_cache::from_json(const lib::json_cache &json_cache)
