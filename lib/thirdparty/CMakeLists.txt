@@ -4,12 +4,10 @@ project(spotify-qt-lib-third-party)
 add_library(${PROJECT_NAME} STATIC)
 
 # SQLite cache support
-if (NOT DEFINED USE_DB_CACHE)
-	set(USE_DB_CACHE ON)
-endif ()
+option(USE_DB_CACHE "Use SQLite based cache" ON)
+option(USE_BUNDLED_SQLITE "Force use bundled SQLite" OFF)
 
-# TODO: On error, use bundled SQLite instead
-if (USE_DB_CACHE)
+if (USE_DB_CACHE AND NOT USE_BUNDLED_SQLITE)
 	find_package(PkgConfig QUIET)
 	if (PkgConfig_FOUND)
 		pkg_check_modules(SQLITE sqlite3 QUIET)
@@ -18,10 +16,17 @@ if (USE_DB_CACHE)
 			target_include_directories(${PROJECT_NAME} PRIVATE "${SQLITE_INCLUDE_DIRS}")
 			target_link_libraries(${PROJECT_NAME} PRIVATE "${SQLITE_LIBRARIES}")
 			message(STATUS "Using SQLite ${SQLITE_VERSION} (system)")
-		else ()
-			message(WARNING "SQLite error: sqlite3 not found")
 		endif ()
-	else ()
-		message(WARNING "SQLite error: pkg-config not found")
 	endif ()
+endif ()
+
+if (NOT SQLITE_VERSION)
+	# sqlite3.h is expected in the root
+	target_include_directories(${PROJECT_NAME} PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/include/thirdparty)
+
+	target_sources(${PROJECT_NAME} PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/src/sqlite3.c)
+
+	message(STATUS "Using SQLite (bundled)")
 endif ()
