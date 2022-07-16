@@ -80,6 +80,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## [sqlite](https://github.com/sqlite/sqlite)
+v3.39.1, used for caching.
+```
+The author disclaims copyright to this source code.  In place of
+a legal notice, here is a blessing:
+
+  *   May you do good and not evil.
+  *   May you find forgiveness for yourself and forgive others.
+  *   May you share freely, never taking more than you give.
+```
+
+
 ## [sqlite_modern_cpp](https://github.com/SqliteModernCpp/sqlite_modern_cpp)
 v3.2, used for caching.
 ```
